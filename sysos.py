@@ -144,7 +144,7 @@ def didYouMean(item, matches=Commands):
     """
     fix = difflib.get_close_matches(item, matches)
     if fix != []:
-        return colored(f"Maybe you meant '{colored(', '.join(fix), Advice, attrs=["bold"])}{colored("'?", Advice)}", Advice, attrs=[])
+        return colored(f"Maybe you meant '" + colored(', '.join(fix), Advice, attrs=["bold"])+ colored("'?", Advice), Advice, attrs=[])
     else:
         return colored('No fixes available.', Advice)
 
