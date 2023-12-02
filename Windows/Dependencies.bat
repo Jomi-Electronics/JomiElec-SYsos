@@ -1,3 +1,3 @@
 @echo off
-python -m pip install numpy
+py -m pip install numpy
 pause
