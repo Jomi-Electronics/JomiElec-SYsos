@@ -1,3 +1,3 @@
 @echo off
-py SYsos-main\sysos.py
+py ..\sysos.py
 pause
