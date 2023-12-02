@@ -1,1 +1,1 @@
-sudo python3 sysos.py
+sudo python3 SYsos/sysos.py
