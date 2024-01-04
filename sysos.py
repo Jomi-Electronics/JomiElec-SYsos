@@ -181,10 +181,8 @@ def getFunction(idx):
 #Main loop
 while True:
     prmt = input(colored(f'{usrN}@SYsos', 'green') + colored(' $ ', 'blue')) #f'{usrN}@ParadigmPC $ '
-
-    if prmt == '/usr/local/bin/python3 /Users/Micah/Documents/Tech/Coding/Programs/Python/SYSOS/sysos.py': break
     
-    elif prmt == '': print()
+    if prmt == '': print()
     
     elif getFunction(prmt) not in Commands:
         NotFound(prmt, error='Not found error')
@@ -270,6 +268,3 @@ while True:
             run(''.join(getArgs(prmt)))
         else:
             write(colored(f'WARNING! Command \'{Commands[8]}\' needs a parameter', Warning))
-
-if prmt == '/usr/local/bin/python3 /Users/Micah/Documents/Tech/Coding/Programs/Python/SYSOS/sysos.py':
-    run(prmt)
