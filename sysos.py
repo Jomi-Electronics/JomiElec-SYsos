@@ -471,9 +471,6 @@ try:
                     print(colored(f'Command \'{getArgs(prmt)[1]}\' does not exist', Error))
                 
             #except Exception: typingPrint(colored(f'SYSOS Version: {vsn}', SystemOut), end=colored(' ↵', SystemOut)); input()
-
-    """if prmt == '/usr/local/bin/python3 /Users/Micah/Documents/Tech/Coding/Programs/Python/SYSOS/sysos.py':
-        run(prmt)"""
 except Exception:
     write(colored("FATAL INTERNAL ERROR!", Error))
     write(colored("PLEASE REPORT ISSUE ON GITHUB REPO (https://github.com/Arduinoz-R-Awsome/SYsos)", Error))
