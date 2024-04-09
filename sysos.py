@@ -9,7 +9,7 @@ ThrottleSpeed = 0
 cfgvsn = 1.0
 tasks = ['Clearing output...', 'Loading files...', 'Creating PWDs...', 'Opening \'VirusKiller.op\'...', 'Loading index buffer...', 'Loading \'CMDs.pTx\'...']
 modules = ['time', 'random', 'numpy', 'json']
-Commands = ['con', 'move', 'dir', 'wipe', 'bam', 'ch', 'make', 'rmv', 'run', 'view', 'sysos']
+Commands = ['con', 'move', 'dir', 'wipe', 'bam', 'ch', 'make', 'rmv', 'run', 'view', 'sysos', 'errtest']
 def setCommandHelp():
     global CMDHelp
     CMDHelp = {Commands[0]: 'Lists the contents of the current directory', 
@@ -21,7 +21,8 @@ def setCommandHelp():
             Commands[6]: 'This command can make files and folders', 
             Commands[7]: 'Can delete any thing from files to folders', 
             Commands[8]: 'Runs the command entered in the default terminal', 
-            Commands[9]: 'Displays the contents of a file'}
+            Commands[9]: 'Displays the contents of a file',
+            Commands[11]: 'Runs the sub-routines that catch errors, in order to ensure functionality. \nGood to run every once and a while.'}
     
 setCommandHelp()
 CmdPreset = 'SYSOS Commands'
@@ -80,6 +81,13 @@ def typingPrint(text, end='\n'):
         sys.stdout.flush()
         time.sleep(ThrottleSpeed)
   
+def ERROR(message, code, exit=True):
+    print(colored(f"* FATAL INTERNAL ERROR!\n* PLEASE REPORT ISSUE ON GITHUB REPO (https://github.com/Arduinoz-R-Awsome/SYsos)\n* Exit code, status: {code}; %${message}%$", Error))
+    if exit == True:
+        sys.exit(1)
+    else:
+        return None
+
 def typingInput(text):
     for character in text:
         sys.stdout.write(character)
@@ -421,6 +429,10 @@ try:
                             while True:
                                 key = typingInput(colored('Color to change:', cPrompt))
                                 if key == 'done': break
+                                elif key == 'colors':
+                                    typingPrint(colored('''Avaliable text colors: \n    black, red, green, yellow, blue, magenta, cyan, white, light_grey, \n    dark_grey, light_red, light _green, light_yellow, light_blue, light_magenta, \n    light_cyan.''', SystemOut))
+                                    input(colored('Press ↵', SystemOut))
+                                    continue
                                 elif key not in str(OUTPUT_COLORS) + str(FILE_COLORS):
                                     print(colored('Invalid input', Error))
                                     continue
@@ -471,7 +483,11 @@ try:
                     print(colored(f'Command \'{getArgs(prmt)[1]}\' does not exist', Error))
                 
             #except Exception: typingPrint(colored(f'SYSOS Version: {vsn}', SystemOut), end=colored(' ↵', SystemOut)); input()
+        elif getFunction(prmt) == Commands[11]:
+            time.sleep(2)
+            ERROR('errtest: internal program failure', 2, exit=False)
+            time.sleep(2)
+            print(colored('Test successful.', SystemOut), end=' '); input(colored('↵', SystemOut))
+
 except Exception:
-    write(colored("FATAL INTERNAL ERROR!", Error))
-    write(colored("PLEASE REPORT ISSUE ON GITHUB REPO (https://github.com/Arduinoz-R-Awsome/SYsos)", Error))
-    sys.exit(1)
+    ERROR('Unexpected program exit', 1)
