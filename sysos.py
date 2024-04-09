@@ -5,10 +5,11 @@ your imagination. Please use it as such.
 """
 #Define variables
 vsn = 1
+ThrottleSpeed = 0
 cfgvsn = 1.0
 tasks = ['Clearing output...', 'Loading files...', 'Creating PWDs...', 'Opening \'VirusKiller.op\'...', 'Loading index buffer...', 'Loading \'CMDs.pTx\'...']
 modules = ['time', 'random', 'numpy', 'json']
-Commands = ['con', 'move', 'dir', 'wipe', 'bam', 'ch', 'make', 'rmv', 'run', 'open', 'sysos']
+Commands = ['con', 'move', 'dir', 'wipe', 'bam', 'ch', 'make', 'rmv', 'run', 'view', 'sysos']
 def setCommandHelp():
     global CMDHelp
     CMDHelp = {Commands[0]: 'Lists the contents of the current directory', 
@@ -35,26 +36,33 @@ LsCache = {}
 CTemp = []
 global editCmd
 
-#Colors:
-Error = 'red'
-Warning = 'yellow'
-SystemOut = 'cyan'
-Advice = 'magenta'
-Other = 'white'
-cPrompt = 'dark_grey'
-#File colors:
-Direc = 'blue'
-Text = 'magenta'
-Runable = 'green'
+OUTPUT_COLORS = {'Error': 'red', 'Warning': 'yellow', 'SystemOut': 'cyan', 'Advice': 'magenta', 'Other': 'white', 'cPrompt': 'dark_grey'}
+FILE_COLORS = {'Direc': 'blue', 'Text': 'magenta', 'Runable': 'green'}
+def update_Colors():
+    global Error, Warning, SystemOut, Advice, Other, cPrompt, Direc, Text, Runable
+    #Colors:
+    Error = OUTPUT_COLORS['Error']
+    Warning = OUTPUT_COLORS['Warning']
+    SystemOut = OUTPUT_COLORS['SystemOut']
+    Advice = OUTPUT_COLORS['Advice']
+    Other = OUTPUT_COLORS['Other']
+    cPrompt = OUTPUT_COLORS['cPrompt']
+    #File colors:
+    Direc = FILE_COLORS['Direc']
+    Text = FILE_COLORS['Text']
+    Runable = FILE_COLORS['Runable']
 
+update_Colors()
 #Import necessary modules
 import time, random, numpy as np
 from os import system as run
-import sys, difflib, json
+import sys
+import difflib
+import json
 from termcolor import *
 
 #Load everything
-print(f'Loading Paradigm OS version {vsn}...')
+print(f'Loading SYSOS version {vsn}...')
 for i in tasks:
     print(colored(i, 'black', 'on_cyan'))
     time.sleep(0) #random.randint(1, 3) 
@@ -70,13 +78,13 @@ def typingPrint(text, end='\n'):
     for character in text:
         sys.stdout.write(character)
         sys.stdout.flush()
-        time.sleep(0.01)
+        time.sleep(ThrottleSpeed)
   
 def typingInput(text):
     for character in text:
         sys.stdout.write(character)
         sys.stdout.flush()
-        time.sleep(0.01)
+        time.sleep(ThrottleSpeed)
     value = input()
     return value
 
@@ -213,56 +221,74 @@ def make(i):
     listContents()
 
 #Main loop
-while True:
-    prmt = input(colored(f'{usrN}@SYsos', 'green') + colored(' $ ', 'blue')) #f'{usrN}@ParadigmPC $ '
-    
-    if prmt == '': print()
-    
-    elif getFunction(prmt) not in Commands:
-        NotFound(prmt, error='Not found error')
-        print(didYouMean(prmt))
+try:
+    while True:
+        prmt = input(colored(f'{usrN}@SYsos', 'green') + colored(' $ ', 'blue')) #f'{usrN}@ParadigmPC $ '
+
+        #if prmt == '/usr/local/bin/python3 /Users/Micah/Documents/Tech/Coding/Programs/Python/SYSOS/sysos.py': break
         
-    elif prmt == Commands[0]: listContents()                                        #con
-    
-    elif getFunction(prmt) == Commands[1]:                                                       #move
-        if getArgs(prmt) == []:
-            write(colored(f'WARNING! Command \'{Commands[1]}\' needs a parameter', Warning))
-            continue
-
-        if ''.join(getArgs(prmt)) == 'up':
-            tmp = Directory.split('/')
-            del tmp[-1]
-            tmp = '/'.join(tmp)
-            Directory = tmp
-            print(colored(Directory, Direc))
-
-        elif ''.join(getArgs(prmt)) in [k for d in listContents(False) for k in d.keys()]:
-            Directory += f'/{getArgs(prmt)[0]}'
-            print(colored(Directory, Direc))
-        elif ''.join(getArgs(prmt)) not in [k for d in listContents(False) for k in d.keys()]:
-            write(colored('No such directory', Error))
+        if prmt == '': print()
+        
+        elif getFunction(prmt) not in Commands:
+            NotFound(prmt, error='Not found error')
+            print(didYouMean(prmt))
             
-
-    elif prmt == Commands[3]: run('clear')                                                             #wipe
-    
-    elif prmt == Commands[4]: raise SystemExit                                                         #bam
-    
-    elif prmt == Commands[2]: print(colored(Directory, SystemOut))                                     #dir
-
-    elif getFunction(prmt) == Commands[5]:                                                             #ch
+        elif prmt == Commands[0]: listContents()                                        #con
+        
+        elif getFunction(prmt) == Commands[1]:                                                       #move
             if getArgs(prmt) == []:
-                write(colored(f'WARNING! Command \'{Commands[5]}\' needs a parameter', Warning))
+                write(colored(f'WARNING! Command \'{Commands[1]}\' needs a parameter', Warning))
                 continue
-            if getArgs(prmt) == ['usern']: changeUserName()
-            if getArgs(prmt)[0] == 'cmds':
-                if '-super' not in getArgs(prmt):
-                    if prompt('RootUserError') == 'continue':
+
+            if ''.join(getArgs(prmt)) == 'up':
+                tmp = Directory.split('/')
+                del tmp[-1]
+                tmp = '/'.join(tmp)
+                Directory = tmp
+                print(colored(Directory, Direc))
+
+            elif ''.join(getArgs(prmt)) in [k for d in listContents(False) for k in d.keys()]:
+                Directory += f'/{getArgs(prmt)[0]}'
+                print(colored(Directory, Direc))
+            elif ''.join(getArgs(prmt)) not in [k for d in listContents(False) for k in d.keys()]:
+                write(colored('No such directory', Error))
+                
+
+        elif prmt == Commands[3]: run('clear')                                                             #wipe
+        
+        elif prmt == Commands[4]: raise SystemExit                                                         #bam
+        
+        elif prmt == Commands[2]: print(colored(Directory, SystemOut))                                     #dir
+
+        elif getFunction(prmt) == Commands[5]:                                                             #ch
+                if getArgs(prmt) == []:
+                    write(colored(f'WARNING! Command \'{Commands[5]}\' needs a parameter', Warning))
+                    continue
+                if getArgs(prmt) == ['usern']: changeUserName()
+                if getArgs(prmt)[0] == 'cmds':
+                    if '-super' not in getArgs(prmt):
+                        if prompt('RootUserError') == 'continue':
+                            print(colored('LISTING COMMANDS:', SystemOut))
+                            for i in range(0, len(Commands)):
+                                print(colored(Commands[i], SystemOut, attrs=['bold']), end=colored(', ', SystemOut, attrs=['bold']))
+                                time.sleep(0.1)
+                            print()
+                            editCmd = typingInput(colored('Command to edit: ', cPrompt))
+                            if editCmd == '': continue
+                            if editCmd == 'done': flag = 'done'; continue
+                            if editCmd not in Commands:
+                                NotFound(editCmd, error='Not found error')
+                                print(didYouMean(editCmd))
+                                continue
+                            changeCmd = input(colored(f'Change \'{editCmd}\' to: ', cPrompt))
+                            Commands[Commands.index(editCmd)] = changeCmd
+                            setCommandHelp()
+                    elif '-super' in getArgs(prmt):
                         print(colored('LISTING COMMANDS:', SystemOut))
                         for i in range(0, len(Commands)):
                             print(colored(Commands[i], SystemOut, attrs=['bold']), end=colored(', ', SystemOut, attrs=['bold']))
-                            time.sleep(0.1)
                         print()
-                        editCmd = typingInput(colored('Command to edit: ', cPrompt))
+                        editCmd = input(colored('Command to edit: ', cPrompt))
                         if editCmd == '': continue
                         if editCmd == 'done': flag = 'done'; continue
                         if editCmd not in Commands:
@@ -272,48 +298,33 @@ while True:
                         changeCmd = input(colored(f'Change \'{editCmd}\' to: ', cPrompt))
                         Commands[Commands.index(editCmd)] = changeCmd
                         setCommandHelp()
-                elif '-super' in getArgs(prmt):
-                    print(colored('LISTING COMMANDS:', SystemOut))
-                    for i in range(0, len(Commands)):
-                        print(colored(Commands[i], SystemOut, attrs=['bold']), end=colored(', ', SystemOut, attrs=['bold']))
-                    print()
-                    editCmd = input(colored('Command to edit: ', cPrompt))
-                    if editCmd == '': continue
-                    if editCmd == 'done': flag = 'done'; continue
-                    if editCmd not in Commands:
-                        NotFound(editCmd, error='Not found error')
-                        print(didYouMean(editCmd))
-                        continue
-                    changeCmd = input(colored(f'Change \'{editCmd}\' to: ', cPrompt))
-                    Commands[Commands.index(editCmd)] = changeCmd
-                    setCommandHelp()
 
-    elif getFunction(prmt) == Commands[6]:                                                            #make
-        make(prmt)
-    elif getFunction(prmt) == Commands[7]:                                                            #rmv
-        try:
-            if getArgs(prmt)[0] in files:
-                del files[getArgs(prmt)[0]]
-                listContents()
+        elif getFunction(prmt) == Commands[6]:                                                            #make
+            make(prmt)
+        elif getFunction(prmt) == Commands[7]:                                                            #rmv
+            try:
+                if getArgs(prmt)[0] in files:
+                    del files[getArgs(prmt)[0]]
+                    listContents()
+                else:
+                    write(colored(f'No such file or directory: {getArgs(prmt)[0]}', Error))
+            except IndexError:
+                write(colored(f'WARNING! Command \'{Commands[7]}\' needs a parameter', Warning))
+        elif getFunction(prmt) == Commands[8]:                                                            #run
+            if getArgs(prmt) != []:
+                run(' '.join(getArgs(prmt)))
             else:
-                write(colored(f'No such file or directory: {getArgs(prmt)[0]}', Error))
-        except IndexError:
-            write(colored(f'WARNING! Command \'{Commands[7]}\' needs a parameter', Warning))
-    elif getFunction(prmt) == Commands[8]:                                                            #run
-        if getArgs(prmt) != []:
-            run(' '.join(getArgs(prmt)))
-        else:
-            write(colored(f'WARNING! Command \'{Commands[8]}\' needs a parameter', Warning))
-    elif getFunction(prmt) == Commands[9]:                                                            #Open
-        with open(f'{getArgs(prmt)[0]}.txt', 'r') as file:
-            print(file.read())
-    elif getFunction(prmt) == Commands[10]:                                                           #sysos
-        try:
+                write(colored(f'WARNING! Command \'{Commands[8]}\' needs a parameter', Warning))
+        elif getFunction(prmt) == Commands[9]:                                                            #Open
+            with open(f'{getArgs(prmt)[0]}.txt', 'r') as file:
+                print(file.read())
+        elif getFunction(prmt) == Commands[10]:                                                           #sysos
+            #try:
             if getArgs(prmt)[0] == 'config':
                 #Start sysos configuration
                 run('clear')
                 menu = 'main'
-                typingPrint(colored('SYSOS CONFIGURATION TOOL', 'green', 'on_cyan'))
+                typingPrint(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
                 typingPrint(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))
                 print(colored(f'Menu: {menu}', 'green', 'on_yellow'))
                 typingPrint(colored('SETTINGS OPTIONS:', 'red'))
@@ -326,7 +337,7 @@ while True:
                         if ans == '1':
                             menu = 'Command Cfg'
                             run('clear')
-                            print(colored('SYSOS CONFIGURATION TOOL', 'green', 'on_cyan'))
+                            print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
                             print(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))
                             print(colored(f'Menu: {menu}', 'green', 'on_yellow'))
                             typingPrint(colored('1: ', Other) + colored('Edit commands', 'red'))
@@ -336,8 +347,8 @@ while True:
                                 flag = ''
                                 while flag != 'done':
                                     run('clear')
-                                    print(colored('SYSOS CONFIGURATION TOOL', 'green', 'on_cyan'))
-                                    print(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))                            
+                                    print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
+                                    print(colored(f'      version {cfgvsn}       ', 'magenta', 'on_cyan'))                            
                                     print(colored('LISTING COMMANDS:', SystemOut))
                                     for i in range(0, len(Commands)):
                                         print(colored(Commands[i], SystemOut, attrs=['bold']), end=colored(', ', SystemOut, attrs=['bold']))
@@ -357,8 +368,8 @@ while True:
                                 flag = ''
                                 while flag != 'done':
                                     run('clear')
-                                    print(colored('SYSOS CONFIGURATION TOOL', 'green', 'on_cyan'))
-                                    print(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))
+                                    print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
+                                    print(colored(f'      version {cfgvsn}       ', 'magenta', 'on_cyan'))
                                     typingPrint(colored('COMMANDS PRESETS:', 'red'))
                                     typingPrint(colored('1: ', Other) + colored('Unix', 'red'))
                                     typingPrint(colored('2: ', Other) + colored('SYSOS\n', 'red'))
@@ -388,14 +399,66 @@ while True:
                             time.sleep(random.randint(0, 2))
                             typingPrint(colored(f'Already in \'main\'', Error))
                             time.sleep(2)
+                        elif ans == '2':
+                            menu = 'Colors'
+                            run('clear')
+                            AvaliableColors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'light_grey', 'dark_grey', 'light_red', 'light _green', 'light_yellow', 'light_blue', 'light_magenta', 'light_cyan']
+                            typingPrint(colored('''Avaliable text colors: \n    black, red, green, yellow, blue, magenta, cyan, white, light_grey, \n    dark_grey, light_red, light _green, light_yellow, light_blue, light_magenta, \n    light_cyan.''', SystemOut))
+                            input(colored('Press ↵', SystemOut))
+                            run('clear')
+                            print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
+                            print(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))
+                            print(colored(f'Menu: {menu}', 'green', 'on_yellow'))
+                            print(colored('LISTING FILE COLORS:', SystemOut))
+                            for file, color in FILE_COLORS.items():
+                                print(colored(f'{file}: {color}', SystemOut, attrs=['bold']))
+                                time.sleep(0.1)
+                            print()
+                            print(colored('LISTING OUTPUT COLORS:', SystemOut))
+                            for outType, color in OUTPUT_COLORS.items():
+                                print(colored(f'{outType}: {color}', SystemOut, attrs=['bold']))
+                                time.sleep(0.1)
+                            while True:
+                                key = typingInput(colored('Color to change:', cPrompt))
+                                if key == 'done': break
+                                elif key not in str(OUTPUT_COLORS) + str(FILE_COLORS):
+                                    print(colored('Invalid input', Error))
+                                    continue
+
+                                value = typingInput(colored(f'Change {key} to:', cPrompt))  
+                                if value == 'done': break
+                                elif value not in AvaliableColors:
+                                    print(colored('Invalid input', Error))
+                                    continue
+                                
+                                else:
+                                    try:
+                                        OUTPUT_COLORS[key] = value
+                                        typingPrint(colored(f'\'{key}\' changed to \'{value}\'', SystemOut))
+                                        update_Colors()
+                                        #print(OUTPUT_COLORS) #For Debugging
+                                        input(colored('↵', SystemOut))
+                                        break
+                                    except Exception:
+                                        try:
+                                            FILE_COLORS[key] = value
+                                            typingPrint(colored(f'{key} changed to {value}', SystemOut))
+                                            update_Colors()
+                                            print(FILE_COLORS) #For Debugging
+                                            input(colored('↵', SystemOut))
+                                            break
+                                        except Exception:
+                                            print(colored('Invalid input', Error))
+                                            continue
+                                
                         else:
                             time.sleep(random.randint(0, 2))
                             typingPrint(colored(f'Invalid input: {ans}', Error))
                             time.sleep(2)
                     menu = 'main'
                     run('clear')
-                    print(colored('SYSOS CONFIGURATION TOOL', 'green', 'on_cyan'))
-                    print(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))
+                    print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
+                    print(colored(f'      version {cfgvsn}       ', 'magenta', 'on_cyan'))
                     print(colored(f'Menu: {menu}', 'green', 'on_yellow'))
                     print(colored('SETTINGS OPTIONS:', 'red'))
                     print(colored('1: ', Other) + colored('Command Configuration', 'red'))
@@ -406,4 +469,12 @@ while True:
                     typingInput('')
                 except Exception:
                     print(colored(f'Command \'{getArgs(prmt)[1]}\' does not exist', Error))
-        except Exception: typingPrint(colored(f'SYSOS Version: {vsn}', SystemOut), end=colored(' ↵', SystemOut)); input()
+                
+            #except Exception: typingPrint(colored(f'SYSOS Version: {vsn}', SystemOut), end=colored(' ↵', SystemOut)); input()
+
+    """if prmt == '/usr/local/bin/python3 /Users/Micah/Documents/Tech/Coding/Programs/Python/SYSOS/sysos.py':
+        run(prmt)"""
+except Exception:
+    write(colored("FATAL INTERNAL ERROR!", Error))
+    write(colored("PLEASE REPORT ISSUE ON GITHUB REPO (https://github.com/Arduinoz-R-Awsome/SYsos)", Error))
+    sys.exit(1)
