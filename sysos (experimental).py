@@ -14,7 +14,7 @@ from termcolor import *
 
 #Define variables
 filesToSave = {}
-vsn = 1
+vsn = "1.2.1 Experimental Edition"
 ThrottleSpeed = 0
 cfgvsn = 1.0
 tasks = ['Clearing output...', 'Loading files...', 'Creating PWDs...', 'Opening \'VirusKiller.op\'...', 'Loading index buffer...', 'Loading \'CMDs.pTx\'...']
