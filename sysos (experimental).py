@@ -69,11 +69,19 @@ update_Colors()
 
 #Load everything
 print(f'Loading SYSOS version {vsn}...')
+tmp = input(colored('Computer type [1:Unix/2:Windows]:', 'black', f'on_{cPrompt}'))
+Computer = tmp.lower().split()[0]
+if Computer == '1':
+    OperatingSystem = 'Unix'
+    clear = 'clear'
+elif Computer == '2':
+    OperatingSystem = 'Windows'
+    clear = 'cls'
 for i in tasks:
     print(colored(i, 'black', 'on_cyan'))
     time.sleep(0) #random.randint(1, 3) 
     if tasks.index(i) == 0:
-        run('clear')
+        run(clear)
         print(colored('Output cleared', 'cyan', attrs=['blink']))
 
 usrN = input(colored('Enter your username: ', 'black', f'on_{cPrompt}'))
@@ -300,7 +308,7 @@ while True:
             write(colored('No such directory', Error))
             
 
-    elif prmt == Commands[3]: run('clear')                                                             #wipe
+    elif prmt == Commands[3]: run(clear)                                                             #wipe
     
     elif prmt == Commands[4]: raise SystemExit                                                         #bam
     
@@ -368,7 +376,7 @@ while True:
         #try:
         if getArgs(prmt)[0] == 'config':
             #Start sysos configuration
-            run('clear')
+            run(clear)
             menu = 'main'
             typingPrint(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
             typingPrint(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))
@@ -378,11 +386,11 @@ while True:
             typingPrint(colored('2: ', Other) + colored('Color Theme\n', 'red'))
             while True:
                 ans = typingInput(colored('>', cPrompt))
-                if ans == 'done': run('clear'); break
+                if ans == 'done': run(clear); break
                 else:
                     if ans == '1':
                         menu = 'Command Cfg'
-                        run('clear')
+                        run(clear)
                         print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
                         print(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))
                         print(colored(f'Menu: {menu}', 'green', 'on_yellow'))
@@ -392,7 +400,7 @@ while True:
                         if ans == '1':
                             flag = ''
                             while flag != 'done':
-                                run('clear')
+                                run(clear)
                                 print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
                                 print(colored(f'      version {cfgvsn}       ', 'magenta', 'on_cyan'))                            
                                 print(colored('LISTING COMMANDS:', SystemOut))
@@ -413,7 +421,7 @@ while True:
                         elif ans == '2':
                             flag = ''
                             while flag != 'done':
-                                run('clear')
+                                run(clear)
                                 print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
                                 print(colored(f'      version {cfgvsn}       ', 'magenta', 'on_cyan'))
                                 typingPrint(colored('COMMANDS PRESETS:', 'red'))
@@ -447,11 +455,11 @@ while True:
                         time.sleep(2)
                     elif ans == '2':
                         menu = 'Colors'
-                        run('clear')
+                        run(clear)
                         AvaliableColors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'light_grey', 'dark_grey', 'light_red', 'light _green', 'light_yellow', 'light_blue', 'light_magenta', 'light_cyan']
                         typingPrint(colored('''Avaliable text colors: \n    black, red, green, yellow, blue, magenta, cyan, white, light_grey, \n    dark_grey, light_red, light _green, light_yellow, light_blue, light_magenta, \n    light_cyan.''', SystemOut))
                         input(colored('Press ↵', SystemOut))
-                        run('clear')
+                        run(clear)
                         print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
                         print(colored(f'      version {cfgvsn}       ', 'green', 'on_cyan'))
                         print(colored(f'Menu: {menu}', 'green', 'on_yellow'))
@@ -506,7 +514,7 @@ while True:
                         typingPrint(colored(f'Invalid input: {ans}', Error))
                         time.sleep(2)
                 menu = 'main'
-                run('clear')
+                run(clear)
                 print(colored('SYSOS CONFIGURATION TOOL', 'magenta', 'on_cyan'))
                 print(colored(f'      version {cfgvsn}       ', 'magenta', 'on_cyan'))
                 print(colored(f'Menu: {menu}', 'green', 'on_yellow'))
@@ -520,14 +528,14 @@ while True:
             except Exception:
                 print(colored(f'Command \'{getArgs(prmt)[1]}\' does not exist', Error))
             
-        #except Exception: typingPrint(colored(f'SYSOS Version: {vsn}', SystemOut), end=colored(' ↵', SystemOut)); input()
+        elif getArgs(prmt)[0] == 'version': typingPrint(colored(f'SYSOS Version: {vsn}', SystemOut), end=colored(' ↵', SystemOut)); input()
+
     elif getFunction(prmt) == Commands[11]:
         time.sleep(2)
         ERROR('errtest: internal program failure', 2, exit=False)
         time.sleep(2)
         print(colored('Test successful.', SystemOut), end=' '); input(colored('↵', SystemOut))
 
-        
         """if prmt == '/usr/local/bin/python3 /Users/Micah/Documents/Tech/Coding/Programs/Python/SYSOS/sysos.py':
             run(prmt)"""
 #except Exception:
