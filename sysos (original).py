@@ -55,7 +55,7 @@ def update_Colors():
 
 update_Colors()
 #Import necessary modules
-import time, random, numpy as np
+import time, random
 from os import system as run
 import sys
 import difflib
